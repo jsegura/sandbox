@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# You must create your personal token with the proper permissions
+
+if [[ $# -ne 2 ]]; then
+  echo "github-clone-org token org-name"
+  exit 1
+fi
+
+token=$1
+org=$2
+
+curl -u $token:x-oauth-basic -s https://api.github.com/orgs/$org/repos\?per_page\=200 | ruby -rubygems -e 'require "json"; JSON.load(STDIN.read).each { |repo| %x[git clone #{repo["ssh_url"]} ]}'
+
+
